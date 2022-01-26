@@ -44,9 +44,9 @@ class FileConverter():
         if fromType == 'csv':
             self.dataLoader = CsvFileLoader()
         if fromType == 'xml':
-            self.dataLoader = XlsxFileLoader()
-        if fromType == 'xlsx':
             self.dataLoader = XmlFileLoader()
+        if fromType == 'xlsx':
+            self.dataLoader = XlsxFileLoader()
         if toType == 'json':
             self.converter = JsonConverter()
 
