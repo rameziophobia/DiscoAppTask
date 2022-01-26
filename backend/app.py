@@ -10,14 +10,23 @@ DATA_PATH = os.getenv('IMDB_DATA_PATH')
 def hello_world():
     return "<p>Hello, World!</p>"
 
+# todo remove special characters
 def does_arg_allow_row(row, arg):
     arg_key, arg_value = arg
+    if arg_key.endswith('_at_least'):
+        key_without_suffix = arg_key[:-len('_at_least')]
+        return float(row[key_without_suffix]) >= float(arg_value)
+
+    if arg_key.endswith('_at_most'):
+        key_without_suffix = arg_key[:-len('_at_most')]
+        return float(row[key_without_suffix]) <= float(arg_value)
+
     if arg_key == 'overview':
         # naive implementation
         overview = row[arg_key].lower()
         return any([word in overview for word in arg_value.split(' ')])
-    else:
-        return row[arg_key].lower() == arg_value.lower()
+
+    return row[arg_key].lower() == arg_value.lower()
 
 def do_args_allow_row(row, args):
     return all([does_arg_allow_row(row, arg) for arg in args.items()])
