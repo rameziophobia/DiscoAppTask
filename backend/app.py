@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, jsonify, Response, send_file
 import csv
 import os
+import file_converter
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -51,3 +52,12 @@ def search():
 
     # id, title, release_date, overview, popularity, vote_average, vote_count, video
     return jsonify(res)
+
+@app.route('/convert', methods=['POST'])
+def convert():
+    form = request.form
+    file = request.files['file']
+    fileConverter = file_converter.FileConverter(form.fromType, form.toType, file)
+    converted_file = fileConverter.convert()
+    print(file)
+    return send_file('file', mimetype='image/gif')
