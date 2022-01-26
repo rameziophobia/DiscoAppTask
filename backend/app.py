@@ -25,15 +25,19 @@ def does_arg_allow_row(row, arg):
         return float(row[key_without_suffix]) <= float(arg_value)
 
     if arg_key == 'overview':
-        # naive implementation
+        # naive implementation that needs optimization
         overview = row[arg_key].lower()
-        return any([word in overview for word in arg_value.split(' ')])
+        return any([any([word == ov for ov in overview.split(' ')]) for word in arg_value.split(' ')])
 
     return row[arg_key].lower() == arg_value.lower()
 
 
 def do_args_allow_row(row, args):
     return all([does_arg_allow_row(row, arg) for arg in args.items()])
+
+
+def count_total_words_in_ref(ref_words, words):
+    return sum([ref in words.split(' ') for ref in ref_words.split(' ')])
 
 
 @app.route('/search', methods=['GET'])
@@ -45,12 +49,11 @@ def search():
         data = csv.DictReader(csv_file)
         try:
             res = [row for row in data if do_args_allow_row(row, args)]
+            if 'overview' in args:
+                res.sort(key=lambda row: count_total_words_in_ref(
+                    row['overview'], args['overview']), reverse=True)
         except:
             return Response("Filter not found", status=400)
-
-    # todo sort by similarity score in overview
-
-    # id, title, release_date, overview, popularity, vote_average, vote_count, video
     return jsonify(res)
 
 
