@@ -6,12 +6,14 @@ app = Flask(__name__)
 app.config.from_pyfile('config.py')
 DATA_PATH = os.getenv('IMDB_DATA_PATH')
 
+
 @app.route("/")
 def hello_world():
-    return "<p>Hello, World!</p>"
+    return "<p>Server Online!</p>"
 
-# todo remove special characters
+
 def does_arg_allow_row(row, arg):
+    # todo remove special characters
     arg_key, arg_value = arg
     if arg_key.endswith('_at_least'):
         key_without_suffix = arg_key[:-len('_at_least')]
@@ -28,8 +30,10 @@ def does_arg_allow_row(row, arg):
 
     return row[arg_key].lower() == arg_value.lower()
 
+
 def do_args_allow_row(row, args):
     return all([does_arg_allow_row(row, arg) for arg in args.items()])
+
 
 @app.route('/search', methods=['GET'])
 def search():
