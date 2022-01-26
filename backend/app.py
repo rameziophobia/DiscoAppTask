@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 import csv
 import os
 
@@ -29,7 +29,10 @@ def search():
 
     with open(DATA_PATH, encoding="utf8") as csv_file:
         data = csv.DictReader(csv_file)
-        res = [row for row in data if do_args_allow_row(row, args)]
+        try:
+            res = [row for row in data if do_args_allow_row(row, args)]
+        except:
+            return Response("Filter not found", status=400)
 
     # todo sort by similarity score in overview
 
