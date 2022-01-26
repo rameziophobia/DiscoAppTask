@@ -24,6 +24,11 @@ def does_arg_allow_row(row, arg):
         key_without_suffix = arg_key[:-len('_at_most')]
         return float(row[key_without_suffix]) <= float(arg_value)
 
+    if arg_key == 'overview_simple':
+        # naive implementation that needs optimization
+        overview = row['overview'].lower()
+        return arg_value in overview
+
     if arg_key == 'overview':
         # naive implementation that needs optimization
         overview = row[arg_key].lower()
