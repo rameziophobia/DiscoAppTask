@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import pandas as pd
+import io
 
 
 class BaseFileLoader(ABC):
@@ -23,6 +24,7 @@ class CsvFileLoader(BaseFileLoader):
     def load(self, file):
         return pd.read_csv(file)
 
+
 class XlsxFileLoader(BaseFileLoader):
     def load(self, file):
         return pd.read_excel(file)
@@ -30,7 +32,8 @@ class XlsxFileLoader(BaseFileLoader):
 
 class XmlFileLoader(BaseFileLoader):
     def load(self, file):
-        return pd.read_xml(file)
+        xml_data = io.BytesIO(file.read())
+        return pd.read_xml(xml_data)
 
 
 class FileConverter():
