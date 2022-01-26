@@ -53,11 +53,15 @@ def search():
     # id, title, release_date, overview, popularity, vote_average, vote_count, video
     return jsonify(res)
 
+
 @app.route('/convert', methods=['POST'])
 def convert():
     form = request.form
-    file = request.files['file']
-    fileConverter = file_converter.FileConverter(form.fromType, form.toType, file)
-    converted_file = fileConverter.convert()
-    print(file)
-    return send_file('file', mimetype='image/gif')
+    file = request.files.get('file')
+    fileConverter = file_converter.FileConverter(
+        form['fromType'], form['toType'])
+
+    try:
+        return fileConverter.convert(file)
+    except NotImplementedError:
+        return Response("This fromType, toType combination is not supported tyet", status=400)
