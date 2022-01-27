@@ -29,10 +29,14 @@ class Search(Resource):
         with open(DATA_PATH, encoding="utf8") as csv_file:
             data = csv.DictReader(csv_file)
             try:
-                res = [row for row in data if search.do_args_allow_row(row, args)]
+                res = [
+                    row for row in data if search.do_args_allow_row(row, args)]
+                for row in res:
+                    del row['']
                 if 'overview' in args or 'overview_simple' in args:
+                    search_tokens = args['overview'] if 'overview' in args else args['overview_simple']
                     res.sort(key=lambda row: search.count_total_words_in_ref(
-                        row['overview'], args['overview']), reverse=True)
+                        row['overview'], search_tokens), reverse=True)
             except:
                 return Response("Filter not found", status=400)
         return jsonify(res)
