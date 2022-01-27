@@ -19,6 +19,12 @@ def does_arg_allow_row(row, arg):
         overview = row[arg_key].lower()
         return any([any([word == ov for ov in overview.split(' ')]) for word in arg_value.split(' ')])
 
+    if arg_key == 'title_exact':
+        return row['title'].lower() == arg_value.lower()
+
+    if arg_key == 'title':
+        return arg_value.lower() in row['title'].lower()
+
     return row[arg_key].lower() == arg_value.lower()
 
 
