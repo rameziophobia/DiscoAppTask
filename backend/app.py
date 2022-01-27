@@ -61,7 +61,7 @@ class Search(Resource):
             data = csv.DictReader(csv_file)
             try:
                 res = [row for row in data if do_args_allow_row(row, args)]
-                if 'overview' in args:
+                if 'overview' in args or 'overview_simple':
                     res.sort(key=lambda row: count_total_words_in_ref(
                         row['overview'], args['overview']), reverse=True)
             except:
